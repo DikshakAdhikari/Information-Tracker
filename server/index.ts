@@ -8,17 +8,13 @@ import mongoose from 'mongoose'
 import userRouter from './routes/user'
 import todosRouter from './routes/todos'
 import cors from 'cors'
-
-
+app.use(cors());
 
 app.use('/user',userRouter)
 app.use('/todos',todosRouter)
 
 if(typeof process.env.MONGO_URI === "string"){
 mongoose.connect(process.env.MONGO_URI).then(()=> console.log('DB connected successfully')).catch((err)=> console.log(err))
-}else{
-    console.log("Incorrect MongoURI");
-    
 }
 
 
