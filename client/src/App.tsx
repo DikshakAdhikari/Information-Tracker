@@ -13,7 +13,7 @@ function App() {
         </Route>
       </Routes>
     </Router> */}
-  <div className='bg-red-950 text-red-600 font-bold'>Heyjjjjjj</div>
+
      
     </>
   )

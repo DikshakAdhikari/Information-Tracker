@@ -2,11 +2,27 @@ import express from 'express'
 import { User } from '../models/user'
 import jwt from 'jsonwebtoken'
 import {verifyJwt} from '../middleware/verifyJwt'
+import {z} from 'zod'
+
+
+let signupInput= z.object({
+    username: z.string().min(5).max(20).email(),
+    password: z.string().min(5).max(12)
+})
+
 const router= express.Router();
+
 
 router.post('/signup', async(req,res)=> {
     try{
-        const {username, password}= req.body;
+        const parsedInput= signupInput.safeParse(req.body);
+        if(!parsedInput.success){
+            return res.status(411).json({
+                msg: parsedInput.error
+            })
+        }
+        const username= parsedInput.data.username;
+        const password= parsedInput.data.password;
         const user= await User.findOne({username: username})
       
         if(user){
