@@ -1,17 +1,21 @@
 import './App.css'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
-import { Signup } from './components/Signup'
-import { Signin } from './components/Signin'
+import { Todos } from './components/Todos'
+import { UpdateTodo } from './components/UpdateTodo'
+import { Signup } from './components/SIgnup'
+
 
 function App() {
   
 
   return (
-    <div className='m-0 p-0'>
+    <div>
     <Router>
       <Routes>
-        <Route path='/' element={<Signup />} />
-        <Route path='/signin' element={<Signin />} />
+        <Route path='/signup' element={<Signup />} />
+        <Route path='/' element={<Todos />} />
+        <Route path='/updateTodo/:id' element={<UpdateTodo />} />
+     
       </Routes>
     </Router>
 
