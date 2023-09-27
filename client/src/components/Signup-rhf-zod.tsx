@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { TSignUpSchema, signUpSchema } from "./lib/types";
+import axios from "axios";
 
 // Why do we need zod when we already have react-hook-form?
 // bcz we only wanna have validation on the client side but we also wanna have validation on the server side. So we are validating this form here on the client but when we get data on the server we basically wanna do validation again cz we cannot trust anything coming from the client on the server.
@@ -16,13 +17,52 @@ export const SignupRhfWithZod = ()=> {
         handleSubmit,
         formState: { errors, isSubmitting },
         reset,
+        setError,
       } = useForm<TSignUpSchema>({ //This we done to connect zod with react-hook-form , for that we make use of resolver what we installed while installling zod
         resolver: zodResolver(signUpSchema)
       });
     
       const onSubmit= async (data: TSignUpSchema)=> { 
-        await new Promise((resolve)=> setTimeout(resolve, 1000));
-        reset() 
+        try{
+          const res= await axios.post('http://localhost:3000/user/post',{
+            email:data.email,
+            password:data.password,
+           //confirmPassword:data.confirmPassword,
+            confirmPassword:4565465464565,
+          });
+          console.log(res.data);
+          
+          if(res.data.errors){
+            const errors= res.data.errors;
+            if(errors.email){
+              setError("email",{
+                type:"server",
+                message: errors.email,
+              })
+            }else if(errors.password){
+              setError("password",{
+                type:"server",
+                message: errors.password,
+            });
+          }else if(errors.confirmPassword){
+            setError("confirmPassword",{
+              type:"server",
+              message: errors.confirmPassword,
+          });
+        }else{
+          alert("Something went wrong!")
+        }
+          
+      }
+    }
+        catch(err){
+          alert("Submission failed")
+          console.log(err);
+          
+        }
+        
+        
+        //reset() 
       }
     
       return (
