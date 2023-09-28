@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { TSignUpSchema, signUpSchema } from "./lib/types";
+import { TSignUpSchema, signUpSchema } from "@dikshak/common"
 import axios from "axios";
 
 // Why do we need zod when we already have react-hook-form?
