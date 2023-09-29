@@ -17,17 +17,17 @@ const user_1 = require("../models/user");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const verifyJwt_1 = require("../middleware/verifyJwt");
 const zod_1 = require("zod");
+const router = express_1.default.Router();
 let signupInput = zod_1.z.object({
     username: zod_1.z.string().min(5).max(20).email(),
     password: zod_1.z.string().min(5).max(12)
 });
-const router = express_1.default.Router();
 router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const parsedInput = signupInput.safeParse(req.body);
         if (!parsedInput.success) {
             return res.status(411).json({
-                msg: parsedInput.error
+                msg: parsedInput
             });
         }
         const username = parsedInput.data.username;
@@ -50,6 +50,15 @@ router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function*
         console.log(err);
     }
 }));
+//  const signUpSchema = z.object({
+//     email: z.string().email(),
+//     password: z.string().min(10 , "Password muse be atleast 10 characters"),
+//     confirmPassword: z.string(),
+//   })
+//   .refine((data)=> data.password === data.confirmPassword, {
+//     message: "Passwords must match",
+//     path:["confirmPassword"],
+//   });
 router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { username } = req.body;
@@ -84,4 +93,19 @@ router.get('/me', verifyJwt_1.verifyJwt, (req, res) => __awaiter(void 0, void 0,
         console.log(err);
     }
 }));
+// router.post('/post', async (req,res)=> {
+//     const body= await req.body;
+//     const result= signUpSchema.safeParse(body);
+//     let zodErrors= {};
+//     if(!result.success){
+//         result.error.issues.forEach((issue)=> {
+//             zodErrors= {...zodErrors, [issue.path[0]]: issue.message}
+//         })
+//     }
+//     return res.json(
+//         Object.keys(zodErrors).length > 0
+//         ? {errors: zodErrors}
+//         : {success: true}
+//     )
+// })
 exports.default = router;
