@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {z} from 'zod'
 
 export const Signup = () => {
@@ -18,13 +17,44 @@ export const Signup = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    setError,
   } = useForm<TsignUpSchema>({
         resolver: zodResolver(signUpSchema)
   });
 
   const handle =async (data: TsignUpSchema)=> {
-    const res= await new Promise((resolve)=> setTimeout(resolve, 3000) )
-    reset();
+    try{
+    const res= await axios.post('http://localhost:3000/user/signup', {username: data.username, password: data.password, confirmPassword:546546546546}); 
+    console.log(res.data);
+
+    if(res.data.errors){
+      const errors= res.data.errors;
+      if(errors.username){
+        setError("username", {
+          type:'server',
+          message:errors.username,
+        })
+      }else if(errors.password){
+        setError("password",{
+          type:"server",
+          message:errors.password,
+        })
+      }else if(errors.confirmPassword){
+        setError("confirmPassword",{
+          type:"server",
+          message:errors.confirmPassword,
+        })
+      }else{
+        alert("Something went wrong");
+      }
+    }
+      
+    //reset();
+  }catch(err){
+    alert("Submission failded")
+    console.log(err);
+    
+  }
   }
 
   //console.log(errors);
