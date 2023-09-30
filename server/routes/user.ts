@@ -2,21 +2,10 @@ import express from "express";
 import { User } from "../models/user";
 import jwt from "jsonwebtoken";
 import { verifyJwt } from "../middleware/verifyJwt";
-import { z } from "zod";
+import {signUpSchema,TsignUpSchema} from 'dikshakk'
+
 const router = express.Router();
 
-const signUpSchema = z
-  .object({
-    username: z.string().min(7).max(20).email(),
-    password: z.string().min(5, "Password must be atleast of length 5").max(20),
-    confirmPassword: z.string().min(5).max(20),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Password must match",
-    path: ["confirmPassword"],
-  });
-
-type TsignUpSchema = z.infer<typeof signUpSchema>;
 router.post("/signup", async (req, res) => {
   const body = await req.body;
   const result = signUpSchema.safeParse(body);

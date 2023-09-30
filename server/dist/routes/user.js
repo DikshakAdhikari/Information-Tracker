@@ -16,21 +16,11 @@ const express_1 = __importDefault(require("express"));
 const user_1 = require("../models/user");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const verifyJwt_1 = require("../middleware/verifyJwt");
-const zod_1 = require("zod");
+const dikshakk_1 = require("dikshakk");
 const router = express_1.default.Router();
-const signUpSchema = zod_1.z
-    .object({
-    username: zod_1.z.string().min(7).max(20).email(),
-    password: zod_1.z.string().min(5, "Password must be atleast of length 5").max(20),
-    confirmPassword: zod_1.z.string().min(5).max(20),
-})
-    .refine((data) => data.password === data.confirmPassword, {
-    message: "Password must match",
-    path: ["confirmPassword"],
-});
 router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const body = yield req.body;
-    const result = signUpSchema.safeParse(body);
+    const result = dikshakk_1.signUpSchema.safeParse(body);
     let zodErrors = {};
     if (!result.success) {
         result.error.issues.forEach((issue) => {
