@@ -14,13 +14,51 @@ router.post("/signup", async (req, res) => {
     result.error.issues.forEach((issue) => {
       zodErrors = { ...zodErrors, [issue.path[0]]: issue.message };
     });
+    res.json(
+      Object.keys(zodErrors).length > 0
+        ? { errors: zodErrors }
+        : { success: true }
+    );
+
   }
 
-  res.json(
-    Object.keys(zodErrors).length > 0
-      ? { errors: zodErrors }
-      : { success: true }
-  );
+  if ('data' in result) {
+    const username= result.data.username;
+    const password= result.data.password;
+    const confirmPassword= result.data.confirmPassword;
+
+    try{
+      if(password === confirmPassword){
+        const user= await User.findOne({username: username})
+  
+          if(user){
+             return  res.json({message: 'user already exists!'})
+          }else{
+              const newUser= new User({username,password});
+              await newUser.save();
+              if(!process.env.SECRET_KEY){
+                  return res.sendStatus(403);
+              }
+              const token = jwt.sign({id: newUser._id}, process.env.SECRET_KEY, {expiresIn: '1h'});
+              res.json({message: "SignedUp successfully", token})
+          }
+      }
+
+
+    }catch(err){
+      res.status(403).json(err)
+    }
+
+   
+
+    
+  } 
+  
+
+
+  
+
+  
 });
 
 // router.post('/signup', async(req,res)=> {
@@ -90,7 +128,7 @@ router.get("/me", verifyJwt, async (req, res) => {
 
 export default router;
 
-// Output of const result= signUpSchema.safeParse(body); is written down :-
+// Output of const result= signUpSchema.safeParse(body) if contains data inside req not expected as zod validation in the server, the error thrown by zod is written below :-
 
 // {
 //     "msg": {
@@ -121,4 +159,16 @@ export default router;
 //             "name": "ZodError"
 //         }
 //     }
+// }
+
+
+
+//If no error by zod validation from data recieved from client inside req to the server, so zod gives output for result= signUpSchema.safeParse(body) is->
+// {
+//   success: true,
+//   data: {
+//     username: 'ddikshakk@gmail.com',
+//     password: '123456',
+//     confirmPassword: '123456'
+//   }
 // }
