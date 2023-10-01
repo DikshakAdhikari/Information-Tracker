@@ -84,25 +84,55 @@ router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function*
 // });
 router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { username } = req.body;
-        const user = yield user_1.User.findOne({ username: username });
-        if (user) {
-            if (!process.env.SECRET_KEY) {
-                return res.sendStatus(403);
-            }
-            const token = jsonwebtoken_1.default.sign({ id: user._id }, process.env.SECRET_KEY, {
-                expiresIn: "1h",
+        const parseResult = dikshakk_1.signInSchema.safeParse(req.body);
+        if (!parseResult.success) {
+            let zodErrors = {};
+            parseResult.error.issues.forEach((issue) => {
+                zodErrors = Object.assign(Object.assign({}, zodErrors), { [issue.path[0]]: issue.message });
             });
-            return res.json({ message: "Logged in successfully", token });
+            res.json(Object.keys(zodErrors).length > 0 ?
+                { errors: zodErrors }
+                : { success: true });
         }
         else {
-            return res.json({ message: "User does not exists" });
+            const username = parseResult.data.username;
+            const password = parseResult.data.password;
+            const user = yield user_1.User.findOne({ username });
+            if (user) {
+                if (!process.env.SECRET_KEY) {
+                    return res.sendStatus(403);
+                }
+                const token = jsonwebtoken_1.default.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: "1h" });
+                res.json({ message: "SignedIn successfully", token });
+            }
+            else {
+                res.json({ message: "User not regiseted, Signup to login!" });
+            }
         }
     }
     catch (err) {
-        console.log(err);
+        res.status(403).json(err);
     }
 }));
+// router.post("/login", async (req, res) => {
+//   try {
+//     const { username } = req.body;
+//     const user = await User.findOne({ username: username });
+//     if (user) {
+//       if (!process.env.SECRET_KEY) {
+//         return res.sendStatus(403);
+//       }
+//       const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
+//         expiresIn: "1h",
+//       });
+//       return res.json({ message: "Logged in successfully", token });
+//     } else {
+//       return res.json({ message: "User does not exists" });
+//     }
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
 router.get("/me", verifyJwt_1.verifyJwt, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = req.headers["userId"];
@@ -121,7 +151,7 @@ router.get("/me", verifyJwt_1.verifyJwt, (req, res) => __awaiter(void 0, void 0,
 exports.default = router;
 // Output of const result= signUpSchema.safeParse(body) if contains data inside req not expected as zod validation in the server, the error thrown by zod is written below :-
 // {
-//     "msg": {
+//  
 //         "success": false,
 //         "error": {
 //             "issues": [
@@ -149,7 +179,6 @@ exports.default = router;
 //             "name": "ZodError"
 //         }
 //     }
-// }
 //If no error by zod validation from data recieved from client inside req to the server, so zod gives output for result= signUpSchema.safeParse(body) is->
 // {
 //   success: true,

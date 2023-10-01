@@ -2,7 +2,7 @@ import express from "express";
 import { User } from "../models/user";
 import jwt from "jsonwebtoken";
 import { verifyJwt } from "../middleware/verifyJwt";
-import {signUpSchema,TsignUpSchema} from 'dikshakk'
+import {signUpSchema,signInSchema} from 'dikshakk'
 
 const router = express.Router();
 
@@ -48,17 +48,9 @@ router.post("/signup", async (req, res) => {
     }catch(err){
       res.status(403).json(err)
     }
-
-   
-
     
   } 
-  
-
-
-  
-
-  
+   
 });
 
 // router.post('/signup', async(req,res)=> {
@@ -90,25 +82,62 @@ router.post("/signup", async (req, res) => {
 //     }
 // });
 
-router.post("/login", async (req, res) => {
-  try {
-    const { username } = req.body;
-    const user = await User.findOne({ username: username });
-    if (user) {
-      if (!process.env.SECRET_KEY) {
-        return res.sendStatus(403);
-      }
-      const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
-        expiresIn: "1h",
+
+router.post("/login", async(req,res)=> {
+  try{
+    const parseResult= signInSchema.safeParse(req.body);
+    if(!parseResult.success){
+      let zodErrors= {};
+      parseResult.error.issues.forEach((issue)=> {
+        zodErrors= {...zodErrors , [issue.path[0]]: issue.message  }
       });
-      return res.json({ message: "Logged in successfully", token });
-    } else {
-      return res.json({ message: "User does not exists" });
+      res.json(
+        Object.keys(zodErrors).length > 0 ?
+        {errors: zodErrors}
+        : {success:true}
+      )
+    }else{
+      const username= parseResult.data.username;
+      const password= parseResult.data.password;
+      const user= await User.findOne({username});
+      if(user){
+        if(!process.env.SECRET_KEY){
+          return res.sendStatus(403);
+        }
+        const token= jwt.sign({id: user._id}, process.env.SECRET_KEY, {expiresIn: "1h"} );
+        res.json({message: "SignedIn successfully", token})
+
+      }else{
+        res.json({message:"User not regiseted, Signup to login!"})
+      }
     }
-  } catch (err) {
-    console.log(err);
+
+
   }
-});
+  catch(err){
+    res.status(403).json(err)
+  }
+})
+
+// router.post("/login", async (req, res) => {
+//   try {
+//     const { username } = req.body;
+//     const user = await User.findOne({ username: username });
+//     if (user) {
+//       if (!process.env.SECRET_KEY) {
+//         return res.sendStatus(403);
+//       }
+//       const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
+//         expiresIn: "1h",
+//       });
+//       return res.json({ message: "Logged in successfully", token });
+//     } else {
+//       return res.json({ message: "User does not exists" });
+//     }
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
 
 router.get("/me", verifyJwt, async (req, res) => {
   try {
@@ -131,7 +160,7 @@ export default router;
 // Output of const result= signUpSchema.safeParse(body) if contains data inside req not expected as zod validation in the server, the error thrown by zod is written below :-
 
 // {
-//     "msg": {
+//  
 //         "success": false,
 //         "error": {
 //             "issues": [
@@ -159,7 +188,7 @@ export default router;
 //             "name": "ZodError"
 //         }
 //     }
-// }
+
 
 
 

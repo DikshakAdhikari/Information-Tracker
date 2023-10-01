@@ -1,39 +1,68 @@
-import axios from 'axios'
-import React from 'react';
-import {useState} from 'react'
-import { useNavigate } from 'react-router-dom';
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import {signInSchema,TsignInSchema} from 'dikshakk'
 
-export const Signin = ()=> {
-    const [username, setUsername]= useState('')
-    const [password, setPassword]= useState('')
+export const Signin = () => {
+ 
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+  } = useForm<TsignInSchema>({
+        resolver: zodResolver(signInSchema)
+  });
+
+  const handle =async (data: TsignInSchema)=> {
+    try{
+      
+    const res= await axios.post('http://localhost:3000/user/login', {username: data.username, password: data.password}); 
+    console.log(res.data);
+
+    if(res.data.errors){
+      const errors= res.data.errors;
+      if(errors.username){
+        setError("username", {
+          type:'server',
+          message:errors.username,
+        })
+      }else if(errors.password){
+        setError("password",{
+          type:"server",
+          message:errors.password,
+        })
+      }else{
+        alert("Something went wrong");
+      }
+    } 
+    else{
+      alert(res.data.message);
+      localStorage.setItem('token', res.data.token)
+    }
+      
+    //reset();
+  }catch(err){
+    alert("Submission failed")
+    console.log(err);
+    
+  }
+  }
+
+  //console.log(errors);
   
-    return(
-        <>
-        <div className='flex flex-col justify-center items-center text-center my-10 gap-5 h-[80vh]'>
-             <div className=''>Signin</div>
-            <div className='flex gap-3'>
-                <div>Username: </div>
-                <input type="text" onChange={(e)=> setUsername(e.target.value)} />
-            </div>
-        
-            <div className='flex gap-3'>
-                <div>Password: </div>
-                <input type="password" onChange={(e)=> setPassword(e.target.value)} />
-            </div>
-            <button onClick={async()=> {
-                try{
-                    const res= await axios.post('http://localhost:3000/user/login', {username, password});
-                    alert('signedin successfully');
-                
-                    console.log(res);     
-                }catch(err){
-                    console.log(err);
-                    
-                }
-               
-            }}>Signin</button>
+  return <>
+    <form onSubmit={handleSubmit(handle)}>
+        <div className=" flex flex-col gap-3 justify-center items-center h-[100vh]">
+            <div  className=" text-[30px]">Signin</div>
+            <input {...register("username")}  placeholder="Username"  className=" border-black shadow-lg p-2 rounded-md w-[300px]" />
+            {errors.username && <p className=" text-red-500">{errors.username.message}</p> }
+            <input {...register("password")} type="password" placeholder="Password" className="p-2 shadow-lg rounded-md w-[300px]" />
+            {errors.password && <p className=" text-red-500">{errors.password.message}</p> }
+            <button disabled={isSubmitting} className="bg-blue-500 p-2 rounded-md text-black disabled:bg-slate-500" type="submit">Submit</button>
 
         </div>
-</>
-    )
-}
+    </form>
+  </>;
+};

@@ -2,15 +2,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import {signUpSchema,TsignUpSchema} from 'dikshakk'
+import { useNavigate } from "react-router-dom";
 
 export const Signup = () => {
- 
+  const navigate= useNavigate();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
     setError,
   } = useForm<TsignUpSchema>({
         resolver: zodResolver(signUpSchema)
@@ -41,11 +41,14 @@ export const Signup = () => {
       }else{
         alert("Something went wrong");
       }
+    }else{
+      alert(res.data.message);
+      navigate('/signin')
     }
       
     //reset();
   }catch(err){
-    alert("Submission failded")
+    alert("Submission failed")
     console.log(err);
     
   }
