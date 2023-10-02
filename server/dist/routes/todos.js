@@ -39,8 +39,8 @@ router.delete('/:courseId/delete', verifyJwt_1.verifyJwt, (req, res) => __awaite
         console.log(userId);
         const todos = yield todos_1.Todo.find({});
         const userTodos = todos.filter((todo) => todo.userId === userId);
-        console.log(userTodos);
-        res.json(todos);
+        // console.log(userTodos);
+        res.json(userTodos);
     }
     catch (err) {
         res.json(err);
@@ -54,7 +54,7 @@ router.get('/todo', verifyJwt_1.verifyJwt, (req, res) => __awaiter(void 0, void 
         // console.log(userId);
         const userTodos = todos.filter((t) => t.userId === userId);
         //console.log(userTodos);
-        res.json({ userTodos });
+        res.json(userTodos);
     }
     catch (err) {
         res.json(err);

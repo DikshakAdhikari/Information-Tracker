@@ -18,6 +18,21 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const verifyJwt_1 = require("../middleware/verifyJwt");
 const dikshakk_1 = require("dikshakk");
 const router = express_1.default.Router();
+router.get("/me", verifyJwt_1.verifyJwt, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = req.headers["userId"];
+        const user = yield user_1.User.findById(userId);
+        if (!user) {
+            return res.sendStatus(403);
+        }
+        const username = user.username;
+        res.json(username);
+    }
+    catch (err) {
+        console.log("puppu");
+        console.log(err);
+    }
+}));
 router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const body = yield req.body;
     const result = dikshakk_1.signUpSchema.safeParse(body);
@@ -133,21 +148,6 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
 //     console.log(err);
 //   }
 // });
-router.get("/me", verifyJwt_1.verifyJwt, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const userId = req.headers["userId"];
-        const user = yield user_1.User.findById(userId);
-        if (!user) {
-            return res.sendStatus(403);
-        }
-        const username = user.username;
-        res.json(username);
-    }
-    catch (err) {
-        console.log("puppu");
-        console.log(err);
-    }
-}));
 exports.default = router;
 // Output of const result= signUpSchema.safeParse(body) if contains data inside req not expected as zod validation in the server, the error thrown by zod is written below :-
 // {

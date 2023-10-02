@@ -2,9 +2,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import {signInSchema,TsignInSchema} from 'dikshakk'
+import { useNavigate } from "react-router-dom";
 
 export const Signin = () => {
- 
+ const navigate= useNavigate()
 
   const {
     register,
@@ -40,6 +41,8 @@ export const Signin = () => {
     else{
       alert(res.data.message);
       localStorage.setItem('token', res.data.token)
+      navigate('/list')
+      
     }
       
     //reset();
@@ -57,9 +60,9 @@ export const Signin = () => {
         <div className=" flex flex-col gap-3 justify-center items-center h-[100vh]">
             <div  className=" text-[30px]">Signin</div>
             <input {...register("username")}  placeholder="Username"  className=" border-black shadow-lg p-2 rounded-md w-[300px]" />
-            {errors.username && <p className=" text-red-500">{errors.username.message}</p> }
+            {errors.username && <p className=" text-red-700">{errors.username.message}</p> }
             <input {...register("password")} type="password" placeholder="Password" className="p-2 shadow-lg rounded-md w-[300px]" />
-            {errors.password && <p className=" text-red-500">{errors.password.message}</p> }
+            {errors.password && <p className=" text-red-700 ">{errors.password.message}</p> }
             <button disabled={isSubmitting} className="bg-blue-500 p-2 rounded-md text-black disabled:bg-slate-500" type="submit">Submit</button>
 
         </div>

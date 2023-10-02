@@ -44,7 +44,7 @@ router.get('/todo', verifyJwt, async(req,res)=> {
        // console.log(userId);
         const userTodos =  todos.filter((t)=> t.userId === userId)
         //console.log(userTodos);
-        res.json({userTodos});
+        res.json(userTodos);
 
     }catch(err){
         res.json(err);

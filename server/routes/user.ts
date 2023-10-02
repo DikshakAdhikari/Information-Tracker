@@ -6,6 +6,22 @@ import {signUpSchema,signInSchema} from 'dikshakk'
 
 const router = express.Router();
 
+router.get("/me", verifyJwt, async (req, res) => {
+  try {
+    const userId = req.headers["userId"];
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.sendStatus(403);
+    }
+    const username = user.username;
+    res.json(username);
+  } catch (err) {
+    console.log("puppu");
+    console.log(err);
+  }
+});
+
+
 router.post("/signup", async (req, res) => {
   const body = await req.body;
   const result = signUpSchema.safeParse(body);
@@ -139,20 +155,6 @@ router.post("/login", async(req,res)=> {
 //   }
 // });
 
-router.get("/me", verifyJwt, async (req, res) => {
-  try {
-    const userId = req.headers["userId"];
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.sendStatus(403);
-    }
-    const username = user.username;
-    res.json(username);
-  } catch (err) {
-    console.log("puppu");
-    console.log(err);
-  }
-});
 
 
 export default router;
