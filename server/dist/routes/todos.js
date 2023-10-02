@@ -30,6 +30,22 @@ router.post('/todo', verifyJwt_1.verifyJwt, (req, res) => __awaiter(void 0, void
         res.status(403).json(err);
     }
 }));
+router.delete('/:courseId/delete', verifyJwt_1.verifyJwt, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { courseId } = req.params;
+        const exceptDelete = yield todos_1.Todo.findByIdAndDelete(courseId);
+        //console.log(exceptDelete); //displays what element we deleted
+        const userId = req.headers["userId"];
+        console.log(userId);
+        const todos = yield todos_1.Todo.find({});
+        const userTodos = todos.filter((todo) => todo.userId === userId);
+        console.log(userTodos);
+        res.json(todos);
+    }
+    catch (err) {
+        res.json(err);
+    }
+}));
 router.get('/todo', verifyJwt_1.verifyJwt, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const todos = yield todos_1.Todo.find({});

@@ -17,6 +17,25 @@ router.post('/todo', verifyJwt, async (req,res)=> {
     }
 });
 
+router.delete('/:courseId/delete', verifyJwt, async (req,res)=> {
+    try{
+        const {courseId}= req.params;
+        const exceptDelete= await Todo.findByIdAndDelete(courseId);
+        //console.log(exceptDelete); //displays what element we deleted
+        const userId= req.headers["userId"];
+        console.log(userId);
+        
+        const todos= await Todo.find({});
+        const userTodos= todos.filter((todo)=> todo.userId === userId);
+        // console.log(userTodos);
+        
+        res.json(userTodos)
+        
+    }catch(err){
+        res.json(err);
+    }
+})
+
 router.get('/todo', verifyJwt, async(req,res)=> {
     try{
          const todos= await Todo.find({});
@@ -44,7 +63,9 @@ router.patch('/:courseId/done', verifyJwt, async (req,res)=> {
     }catch(err){
         res.status(403).json(err)
     }
-})
+});
+
+
 
 
 export default router
