@@ -21,21 +21,30 @@ const List = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const authStateValue = useRecoilValue(authState);
+    //console.log(authStateValue);
+    
     const navigate= useNavigate()
     //console.log(todos);
-    
 
    
     useEffect(() => {
         const getTodos = async () => {
             try{
+              
+                const token= localStorage.getItem('token');
+                
                 const response = await fetch('http://localhost:3000/todos/todo', {
-                headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+                headers: { Authorization: `Bearer ${token}` }
             });
-            // Todo: Create a type for the response that you get back from the server
+            
             const data = await response.json();
-            setTodos(data);
+            if(typeof token === null || typeof token === undefined ||!token ){
+                    navigate('/')
+            }else{
+                setTodos(data);
+            }
             }catch(err){
+                
                 console.log(err);
                 navigate('/')
                 
@@ -43,7 +52,10 @@ const List = () => {
             
         };
         getTodos();
-    }, [authStateValue.token]);
+    }, []);
+
+    
+
 
     const addTodo = async () => {
         const response = await fetch('http://localhost:3000/todos/todo', {
@@ -78,8 +90,8 @@ const List = () => {
                 </div>
             </div>
             <h2>Todo List</h2>
-            <input type='text' value={title} onChange={(e) => setTitle(e.target.value)} placeholder='Title' />
-            <input type='text' value={description} onChange={(e) => setDescription(e.target.value)} placeholder='Description' />
+            <input required={true} type='text' value={title} onChange={(e) => setTitle(e.target.value)} placeholder='Title' />
+            <input required={true} type='text' value={description} onChange={(e) => setDescription(e.target.value)} placeholder='Description' />
             <button onClick={addTodo}>Add Todo</button>
             {todos.map((todo) => (
                 <div key={todo._id}>
@@ -88,7 +100,7 @@ const List = () => {
                     <button onClick={() => markDone(todo._id)}>{todo.done ? 'Done' : 'Mark as Done'}</button>
                     <button onClick={async()=> {
                         const res = await axios.delete(`http://localhost:3000/todos/${todo._id}/delete`,{headers:{Authorization:`Bearer ${localStorage.getItem('token')}`}});
-                        console.log(res.data);
+                        //console.log(res.data);
                         setTodos(res.data)
                         
                     }}>Delete</button>

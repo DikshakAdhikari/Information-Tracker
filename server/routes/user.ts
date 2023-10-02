@@ -115,7 +115,7 @@ router.post("/login", async(req,res)=> {
     }else{
       const username= parseResult.data.username;
       const password= parseResult.data.password;
-      const user= await User.findOne({username});
+      const user= await User.findOne({username, password});
       if(user){
         if(!process.env.SECRET_KEY){
           return res.sendStatus(403);

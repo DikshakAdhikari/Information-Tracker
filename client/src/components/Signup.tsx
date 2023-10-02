@@ -19,7 +19,7 @@ export const Signup = () => {
   const handle =async (data: TsignUpSchema)=> {
     try{
     const res= await axios.post('http://localhost:3000/user/signup', {username: data.username, password: data.password, confirmPassword:data.confirmPassword}); 
-    console.log(res.data);
+   // console.log(res.data);
 
     if(res.data.errors){
       const errors= res.data.errors;

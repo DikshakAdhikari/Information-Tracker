@@ -112,7 +112,7 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         else {
             const username = parseResult.data.username;
             const password = parseResult.data.password;
-            const user = yield user_1.User.findOne({ username });
+            const user = yield user_1.User.findOne({ username, password });
             if (user) {
                 if (!process.env.SECRET_KEY) {
                     return res.sendStatus(403);

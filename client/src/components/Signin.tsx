@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import {signInSchema,TsignInSchema} from 'dikshakk'
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Signin = () => {
  const navigate= useNavigate()
@@ -20,7 +20,7 @@ export const Signin = () => {
     try{
       
     const res= await axios.post('http://localhost:3000/user/login', {username: data.username, password: data.password}); 
-    console.log(res.data);
+    //console.log(res.data);
 
     if(res.data.errors){
       const errors= res.data.errors;
@@ -40,8 +40,15 @@ export const Signin = () => {
     } 
     else{
       alert(res.data.message);
-      localStorage.setItem('token', res.data.token)
+      if(!res.data.token){
+        navigate('/')
+      }else{
+        localStorage.setItem('token', res.data.token)
+
       navigate('/list')
+
+      }
+      
       
     }
       
@@ -64,7 +71,7 @@ export const Signin = () => {
             <input {...register("password")} type="password" placeholder="Password" className="p-2 shadow-lg rounded-md w-[300px]" />
             {errors.password && <p className=" text-red-700 ">{errors.password.message}</p> }
             <button disabled={isSubmitting} className="bg-blue-500 p-2 rounded-md text-black disabled:bg-slate-500" type="submit">Submit</button>
-
+            <div>Don't have account? <Link className=" text-blue-900" to='/'>Signup</Link> to register</div>
         </div>
     </form>
   </>;
