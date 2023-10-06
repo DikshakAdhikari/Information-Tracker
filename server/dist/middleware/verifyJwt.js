@@ -26,7 +26,7 @@ const verifyJwt = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             }
             jsonwebtoken_1.default.verify(token, process.env.SECRET_KEY, (err, payload) => {
                 if (err) {
-                    return res.status(400).json(`damnnnnnnn ${err}`);
+                    return res.status(400).json(err);
                 }
                 if (!payload) {
                     return res.sendStatus(403);

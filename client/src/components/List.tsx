@@ -21,7 +21,7 @@ const List = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const authStateValue = useRecoilValue(authState);
-    //console.log(authStateValue);
+   
     
     const navigate= useNavigate()
     //console.log(todos);

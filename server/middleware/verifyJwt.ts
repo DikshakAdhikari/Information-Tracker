@@ -16,7 +16,7 @@ export const verifyJwt= async (req:Request,res:Response,next:NextFunction)=> {
 
         jwt.verify(token,process.env.SECRET_KEY , (err, payload)=> {
             if(err){
-                return res.status(400).json(`damnnnnnnn ${err}`);
+                return res.status(400).json(err);
             }
             if(!payload){
                 return res.sendStatus(403)
