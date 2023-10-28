@@ -16,7 +16,7 @@ router.get("/me", verifyJwt, async (req, res) => {
     const username = user.username;
     res.json(username);
   } catch (err) {
-    console.log("puppu");
+    //console.log("puppu");
     console.log(err);
   }
 });
@@ -69,35 +69,6 @@ router.post("/signup", async (req, res) => {
    
 });
 
-// router.post('/signup', async(req,res)=> {
-//     try{
-//         const parsedInput= signupInput.safeParse(req.body);
-//         if(!parsedInput.success){
-//             return res.status(411).json({
-//                 msg: parsedInput.error
-//             })
-//         }
-//         const username= parsedInput.data.username;
-//         const password= parsedInput.data.password;
-//         const user= await User.findOne({username: username})
-
-//         if(user){
-//            return  res.json({message: 'user already exists!'})
-//         }else{
-//             const newUser= new User({username,password});
-//             await newUser.save();
-//             if(!process.env.SECRET_KEY){
-//                 return res.sendStatus(403);
-//             }
-//             const token = jwt.sign({id: newUser._id}, process.env.SECRET_KEY, {expiresIn: '1h'});
-//             res.json({message: "SignedUp successfully", token})
-//         }
-
-//     }catch(err){
-//         console.log(err);
-//     }
-// });
-
 
 router.post("/login", async(req,res)=> {
   try{
@@ -134,6 +105,37 @@ router.post("/login", async(req,res)=> {
     res.status(403).json(err)
   }
 })
+// router.post('/signup', async(req,res)=> {
+//     try{
+//         const parsedInput= signupInput.safeParse(req.body);
+//         if(!parsedInput.success){
+//             return res.status(411).json({
+//                 msg: parsedInput.error
+//             })
+//         }
+//         const username= parsedInput.data.username;
+//         const password= parsedInput.data.password;
+//         const user= await User.findOne({username: username})
+
+//         if(user){
+//            return  res.json({message: 'user already exists!'})
+//         }else{
+//             const newUser= new User({username,password});
+//             await newUser.save();
+//             if(!process.env.SECRET_KEY){
+//                 return res.sendStatus(403);
+//             }
+//             const token = jwt.sign({id: newUser._id}, process.env.SECRET_KEY, {expiresIn: '1h'});
+//             res.json({message: "SignedUp successfully", token})
+//         }
+
+//     }catch(err){
+//         console.log(err);
+//     }
+// });
+
+
+
 
 // router.post("/login", async (req, res) => {
 //   try {

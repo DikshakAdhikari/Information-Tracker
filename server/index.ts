@@ -1,14 +1,11 @@
 import express from 'express'
 const app= express();
-
 app.use(express.json());
-
-
 import cors from 'cors'
 import dotenv from 'dotenv'
 dotenv.config()
 const PORT= process.env.PORT;
-const allowedOrigins = ['http://localhost:5173'];
+const allowedOrigins = ['https://task-tracker-dikshak.vercel.app'];
 const options: cors.CorsOptions = {
     origin: allowedOrigins
   };
