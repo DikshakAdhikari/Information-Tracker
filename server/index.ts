@@ -1,20 +1,19 @@
 import express from 'express'
 const app= express();
-app.use(express.json());
 import cors from 'cors'
-import dotenv from 'dotenv'
-dotenv.config()
-const PORT= process.env.PORT;
-const allowedOrigins = 'https://task-tracker-dikshak.vercel.app';
+const allowedOrigins = ['https://task-tracker-dikshak.vercel.app'];
 const options: cors.CorsOptions = {
     origin: allowedOrigins
   };
   app.use(cors(options));
+import dotenv from 'dotenv'
+dotenv.config()
+const PORT= process.env.PORT;
 
+  app.use(express.json());
 import mongoose from 'mongoose'
 import userRouter from './routes/user'
 import todosRouter from './routes/todos'
-import { log } from 'console';
 
 
 

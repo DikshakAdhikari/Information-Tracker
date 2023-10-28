@@ -5,16 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
-app.use(express_1.default.json());
 const cors_1 = __importDefault(require("cors"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
-const PORT = process.env.PORT;
-const allowedOrigins = ['http://localhost:5173'];
+const allowedOrigins = ['https://task-tracker-dikshak.vercel.app'];
 const options = {
     origin: allowedOrigins
 };
 app.use((0, cors_1.default)(options));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const PORT = process.env.PORT;
+app.use(express_1.default.json());
 const mongoose_1 = __importDefault(require("mongoose"));
 const user_1 = __importDefault(require("./routes/user"));
 const todos_1 = __importDefault(require("./routes/todos"));
