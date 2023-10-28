@@ -2,14 +2,23 @@ import express from 'express'
 const app= express();
 
 app.use(express.json());
+
+
+import cors from 'cors'
 import dotenv from 'dotenv'
 dotenv.config()
+const PORT= process.env.PORT;
+const allowedOrigins = ['http://localhost:5173'];
+const options: cors.CorsOptions = {
+    origin: allowedOrigins
+  };
+  app.use(cors(options));
+
 import mongoose from 'mongoose'
 import userRouter from './routes/user'
 import todosRouter from './routes/todos'
-import cors from 'cors'
-const PORT= process.env.PORT;
-app.use(cors());
+
+
 
 app.use('/user',userRouter)
 app.use('/todos',todosRouter)
