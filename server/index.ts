@@ -5,7 +5,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 dotenv.config()
 const PORT= process.env.PORT;
-const allowedOrigins = ['https://task-tracker-dikshak.vercel.app'];
+const allowedOrigins = 'https://task-tracker-dikshak.vercel.app';
 const options: cors.CorsOptions = {
     origin: allowedOrigins
   };
