@@ -17,11 +17,16 @@ const options: cors.CorsOptions = {
 import mongoose from 'mongoose'
 import userRouter from './routes/user'
 import todosRouter from './routes/todos'
+import { log } from 'console';
 
 
 
 app.use('/user',userRouter)
 app.use('/todos',todosRouter)
+
+app.get('/', (req, res) => {
+  res.send('Hey this is my API running 🥳')
+})
 
 if(typeof process.env.MONGO_URI === "string"){
 mongoose.connect(process.env.MONGO_URI).then(()=> console.log('DB connected successfully')).catch((err)=> console.log(err))

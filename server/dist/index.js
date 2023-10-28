@@ -20,6 +20,9 @@ const user_1 = __importDefault(require("./routes/user"));
 const todos_1 = __importDefault(require("./routes/todos"));
 app.use('/user', user_1.default);
 app.use('/todos', todos_1.default);
+app.get('/', (req, res) => {
+    res.send('Hey this is my API running 🥳');
+});
 if (typeof process.env.MONGO_URI === "string") {
     mongoose_1.default.connect(process.env.MONGO_URI).then(() => console.log('DB connected successfully')).catch((err) => console.log(err));
 }
