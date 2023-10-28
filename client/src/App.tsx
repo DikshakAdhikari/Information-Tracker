@@ -40,14 +40,12 @@ function InitState() {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
-     // console.log(data);
-
-      if (data.name != 'TokenExpiredError') {
+     console.log(data);
+ 
+      if (data.name != 'TokenExpiredError' &&  data.name != 'JsonWebTokenError') {
         setAuth({ token: token, username: data });
         navigate("/list");
-      } else {
-        navigate("/");
-      }
+      } 
     } catch (e) {
       navigate("/");
     }

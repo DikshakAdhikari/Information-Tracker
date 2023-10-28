@@ -89,10 +89,10 @@ const List = () => {
                     }}>Logout</button>
                 </div>
             </div>
-            <h2>Todo List</h2>
+            <h2>Task Tracker</h2>
             <input required={true} type='text' value={title} onChange={(e) => setTitle(e.target.value)} placeholder='Title' />
             <input required={true} type='text' value={description} onChange={(e) => setDescription(e.target.value)} placeholder='Description' />
-            <button onClick={addTodo}>Add Todo</button>
+            <button onClick={addTodo}>Add Task</button>
             {todos.map((todo) => (
                 <div key={todo._id}>
                     <h3>{todo.title}</h3>
