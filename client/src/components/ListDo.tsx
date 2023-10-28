@@ -102,7 +102,7 @@ export const ListDo = () => {
         </div>
       </div>
       
-      <h2 className=" text-[35px] m-4">Todo List</h2>
+      <h2 className=" text-[35px] m-4">Task Tracker</h2>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col m-3 gap-5">
@@ -134,7 +134,7 @@ export const ListDo = () => {
           className=" w-[110px] bg-black font-semibold text-white p-3 rounded-md  disabled:bg-slate-500"
           type="submit"
         >
-          Add Todo
+          Add Task
         </button>
 
         </div>
