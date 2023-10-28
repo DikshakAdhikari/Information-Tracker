@@ -27,7 +27,7 @@ export const ListDo = () => {
       try {
         const token = localStorage.getItem("token");
 
-        const response = await fetch("http://localhost:3000/todos/todo", {
+        const response = await fetch("https://list-task-lemon.vercel.app/todos/todo", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -48,7 +48,7 @@ export const ListDo = () => {
   const onSubmit = async () => {
     const title = getValues("title");
     const description = getValues("description");
-    const response = await fetch("http://localhost:3000/todos/todo", {
+    const response = await fetch("https://list-task-lemon.vercel.app/todos/todo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -62,7 +62,7 @@ export const ListDo = () => {
   };
 
   const markDone = async (id: number) => {
-    const response = await fetch(`http://localhost:3000/todos/${id}/done`, {
+    const response = await fetch(`https://list-task-lemon.vercel.app/todos/${id}/done`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });

@@ -33,7 +33,7 @@ const List = () => {
               
                 const token= localStorage.getItem('token');
                 
-                const response = await fetch('http://localhost:3000/todos/todo', {
+                const response = await fetch('https://list-task-lemon.vercel.app/todos/todo', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             
@@ -58,7 +58,7 @@ const List = () => {
 
 
     const addTodo = async () => {
-        const response = await fetch('http://localhost:3000/todos/todo', {
+        const response = await fetch('https://list-task-lemon.vercel.app/todos/todo', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem("token")}` },
             body: JSON.stringify({ title, description })
@@ -70,7 +70,7 @@ const List = () => {
     };
 
     const markDone = async (id:number) => {
-        const response = await fetch(`http://localhost:3000/todos/${id}/done`, {
+        const response = await fetch(`https://list-task-lemon.vercel.app/todos/${id}/done`, {
             method: 'PATCH',
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
         });
@@ -99,7 +99,7 @@ const List = () => {
                     <p>{todo.description}</p>
                     <button onClick={() => markDone(todo._id)}>{todo.done ? 'Done' : 'Mark as Done'}</button>
                     <button onClick={async()=> {
-                        const res = await axios.delete(`http://localhost:3000/todos/${todo._id}/delete`,{headers:{Authorization:`Bearer ${localStorage.getItem('token')}`}});
+                        const res = await axios.delete(`https://list-task-lemon.vercel.app/todos/${todo._id}/delete`,{headers:{Authorization:`Bearer ${localStorage.getItem('token')}`}});
                         //console.log(res.data);
                         setTodos(res.data)
                         
